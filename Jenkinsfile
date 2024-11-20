@@ -3,7 +3,6 @@ pipeline {
     
     environment {
         DOCKER_IMAGE = "milkymilky0116/flake-ide-be"
-        DOCKER_TAG = "latest"
         // Docker Hub 크리덴셜 ID를 설정합니다
         DOCKER_CREDENTIALS_ID = 'jenkins-credentials'
 
@@ -13,6 +12,13 @@ pipeline {
     }
     
     stages {
+        stage('Set Docker Tag') {
+            steps {
+                script {
+                    env.DOCKER_TAG = sh(script: "git describe --tags --always", returnStdout: true).trim()
+                }
+            }
+        }
         stage('Clone Repository') {
             steps {
                 git branch: 'dev',
