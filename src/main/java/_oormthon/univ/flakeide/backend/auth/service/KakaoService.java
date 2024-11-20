@@ -2,9 +2,11 @@ package _oormthon.univ.flakeide.backend.auth.service;
 
 import _oormthon.univ.flakeide.backend.auth.api.dto.Token;
 import _oormthon.univ.flakeide.backend.auth.domain.User;
+import _oormthon.univ.flakeide.backend.auth.domain.UserType;
 import _oormthon.univ.flakeide.backend.auth.domain.repository.UserRepository;
 import _oormthon.univ.flakeide.backend.auth.api.dto.KakaoTokenResDto;
 import _oormthon.univ.flakeide.backend.auth.api.dto.KakaoUserInfo;
+import io.jsonwebtoken.Claims;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,15 +72,11 @@ public class KakaoService {
     public Token loginOrSignUp(String kakaoAccessToken) {
         KakaoUserInfo userInfo = getUserInfo(kakaoAccessToken);
         Long id = userInfo.getId();
-        System.out.println(userInfo.getKakaoAccount().getProfile().getNickname());
-        String email = userInfo.getKakaoAccount().getEmail();
-        if (email == null || email.isEmpty()) {
-            throw new IllegalArgumentException("이메일 정보가 없습니다. 이메일 제공 설정을 확인해주세요.");
-        }
 
         User user = userRepository.findById(id).orElseGet(() ->
             userRepository.save(User.builder()
                 .id(id)
+                .userType(UserType.USER)
                 .name(userInfo.getKakaoAccount().getProfile().getNickname())
                 .email(userInfo.getKakaoAccount().getEmail())
                 .build())
@@ -86,5 +84,25 @@ public class KakaoService {
         );
 
         return tokenProvider.createToken(user);
+    }
+
+    @Transactional
+    public User signUpSnowflake(String token) {
+        Claims claims = tokenProvider.parseJwt(token);
+        Long id = Long.valueOf(claims.getSubject());
+
+        User user = userRepository.findById(id).orElseThrow();
+        user.updateUserType(UserType.SNOWFLAKE);
+        return user;
+    }
+
+    @Transactional
+    public User signUpSnowPine(String token) {
+        Claims claims = tokenProvider.parseJwt(token);
+        Long id = Long.valueOf(claims.getSubject());
+
+        User user = userRepository.findById(id).orElseThrow();
+        user.updateUserType(UserType.SNOW_PINE);
+        return user;
     }
 }

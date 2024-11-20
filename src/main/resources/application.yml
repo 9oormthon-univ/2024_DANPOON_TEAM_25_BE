@@ -16,3 +16,7 @@ server:
 kakao:
   client_id: ${kakao_client_id}
   redirect_uri: ${kakao_redirect_uri}
+
+access:
+  secret_key: ${SECRET_KEY}
+  token_validity_time: ${ACCESS_TOKEN_VALIDITY_TIME}
