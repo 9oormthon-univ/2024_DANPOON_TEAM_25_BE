@@ -29,9 +29,4 @@ public class User {
     @Column(name = "USER_EMAIL", nullable = false)
     private String email;
 
-    @Column(name = "CREATED_AT", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "UPDATED_AT", nullable = false)
-    private LocalDateTime updatedAt;
 }
