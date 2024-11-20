@@ -9,6 +9,6 @@ RUN gradle clean build -x test --no-daemon
 # Stage 2: Production stage
 FROM openjdk:17-jdk-slim
 COPY --from=build /app/build/libs/*.jar app.jar
-EXPOSE 8080
+EXPOSE 8081
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
