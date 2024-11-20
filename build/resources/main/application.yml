@@ -12,3 +12,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 server:
   port: 8081
+
+kakao:
+  client_id: ${kakao_client_id}
+  redirect_uri: ${kakao_redirect_uri}
