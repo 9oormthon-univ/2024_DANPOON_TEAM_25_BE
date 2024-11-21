@@ -2,7 +2,8 @@ package _oormthon.univ.flakeide.backend.snowPine.service;
 
 import _oormthon.univ.flakeide.backend.auth.domain.User;
 import _oormthon.univ.flakeide.backend.auth.domain.repository.UserRepository;
-import _oormthon.univ.flakeide.backend.course.domain.Course;
+import _oormthon.univ.flakeide.backend.course.api.dto.CourseResDto;
+import _oormthon.univ.flakeide.backend.course.api.dto.ListCourseResDto;
 import _oormthon.univ.flakeide.backend.course.domain.repository.CourseRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,15 @@ public class SnowPineService {
         this.courseRepository = courseRepository;
     }
 
-    public List<Course> getCourseOfSnowPine(long snowPineId) {
+    public ListCourseResDto getCourseOfSnowPine(long snowPineId) {
         User snowPine = snowPineRepository.findById(snowPineId).orElseThrow();
-        return courseRepository.findAllBySnowPine(snowPine);
+        return ListCourseResDto.builder()
+            .courseList(getCourseResDtoList(snowPine))
+            .build();
+    }
+
+    private List<CourseResDto> getCourseResDtoList(User snowPine) {
+        return courseRepository.findAllBySnowPine(snowPine).stream().map(
+            CourseResDto::from).toList();
     }
 }
