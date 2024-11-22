@@ -2,6 +2,7 @@ package _oormthon.univ.flakeide.backend.course.domain;
 
 import _oormthon.univ.flakeide.backend.auth.domain.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,9 +19,9 @@ public class SnowflakeCourse {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User snowflake;
+    private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id")
     private Course course;
 

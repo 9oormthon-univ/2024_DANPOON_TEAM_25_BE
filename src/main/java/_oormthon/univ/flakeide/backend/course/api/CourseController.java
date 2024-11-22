@@ -1,5 +1,6 @@
 package _oormthon.univ.flakeide.backend.course.api;
 
+import _oormthon.univ.flakeide.backend.course.api.dto.CourseResDto;
 import _oormthon.univ.flakeide.backend.course.domain.Course;
 import _oormthon.univ.flakeide.backend.course.service.CourseService;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,7 @@ public class CourseController {
     }
 
     @GetMapping("{courseId}")
-    public ResponseEntity<Course> getCourseDetail(@RequestParam("courseId") long courseId) {
-        Course course = courseService.getCourseDetail(courseId);
-        return ResponseEntity.ok(course);
+    public ResponseEntity<CourseResDto> getCourseDetail(@RequestParam("courseId") long courseId) {
+        return ResponseEntity.ok(courseService.getCourseDetail(courseId));
     }
 }
