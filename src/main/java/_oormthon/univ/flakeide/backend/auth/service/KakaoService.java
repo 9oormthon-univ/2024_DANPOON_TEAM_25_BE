@@ -6,10 +6,9 @@ import _oormthon.univ.flakeide.backend.auth.domain.UserType;
 import _oormthon.univ.flakeide.backend.auth.domain.repository.UserRepository;
 import _oormthon.univ.flakeide.backend.auth.api.dto.KakaoTokenResDto;
 import _oormthon.univ.flakeide.backend.auth.api.dto.KakaoUserInfo;
-import io.jsonwebtoken.Claims;
+import _oormthon.univ.flakeide.backend.global.util.UserTokenService;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,20 +18,22 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 public class KakaoService {
 
-    @Autowired
     private final KakaoProperties kakaoProperties;
-    @Autowired
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
+    private final UserTokenService userTokenService;
 
     private final String KAUTH_TOKEN_URL_HOST = "https://kauth.kakao.com";
     private final String KAUTH_USER_URL_HOST = "https://kapi.kakao.com";
 
-    public KakaoService(KakaoProperties kakaoProperties, UserRepository userRepository, TokenProvider tokenProvider) {
+    public KakaoService(KakaoProperties kakaoProperties, UserRepository userRepository,
+        TokenProvider tokenProvider, UserTokenService userTokenService) {
         this.kakaoProperties = kakaoProperties;
         this.userRepository = userRepository;
         this.tokenProvider = tokenProvider;
+        this.userTokenService = userTokenService;
     }
+
 
     public String getAccessToken(String code) {
         KakaoTokenResDto kakaoTokenResDto = WebClient.create(KAUTH_TOKEN_URL_HOST).post()
@@ -80,27 +81,22 @@ public class KakaoService {
                 .name(userInfo.getKakaoAccount().getProfile().getNickname())
                 .email(userInfo.getKakaoAccount().getEmail())
                 .build())
-
         );
 
         return tokenProvider.createToken(user);
     }
 
     @Transactional
-    public User signUpSnowflake(String token) {
-        Claims claims = tokenProvider.parseJwt(token);
-        Long id = Long.valueOf(claims.getSubject());
-
+    public User signUpSnowflake(String authorizationHeader) {
+        Long id = userTokenService.getUserInfoFromToken(authorizationHeader);
         User user = userRepository.findById(id).orElseThrow();
         user.updateUserType(UserType.SNOWFLAKE);
         return user;
     }
 
     @Transactional
-    public User signUpSnowPine(String token) {
-        Claims claims = tokenProvider.parseJwt(token);
-        Long id = Long.valueOf(claims.getSubject());
-
+    public User signUpSnowPine(String authorizationHeader) {
+        Long id = userTokenService.getUserInfoFromToken(authorizationHeader);
         User user = userRepository.findById(id).orElseThrow();
         user.updateUserType(UserType.SNOW_PINE);
         return user;

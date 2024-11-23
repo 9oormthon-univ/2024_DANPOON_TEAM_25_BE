@@ -34,15 +34,11 @@ public class KakaoLoginController {
 
     @PostMapping("/snowflake/signup")
     public ResponseEntity<User> signUpSnowflake(@RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.substring(7).trim();
-        User user = kakaoService.signUpSnowflake(token);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(kakaoService.signUpSnowflake(authorizationHeader));
     }
 
     @PostMapping("/snowPine/signup")
     public ResponseEntity<User> signUpSnowPine(@RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.substring(7).trim();
-        User user = kakaoService.signUpSnowPine(token);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(kakaoService.signUpSnowPine(authorizationHeader));
     }
 }
