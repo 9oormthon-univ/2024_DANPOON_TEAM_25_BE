@@ -40,7 +40,6 @@ public class WorkController {
     })
     public ResponseEntity<String> createWork(@PathVariable("courseId") long courseId, @RequestBody WorkCreateReqDto workCreateReqDto) {
         workService.createWork(courseId, workCreateReqDto);
-        System.out.println("controller: " + workCreateReqDto.title());
         return new ResponseEntity<>("과제(work) 등록", HttpStatus.CREATED);
     }
 

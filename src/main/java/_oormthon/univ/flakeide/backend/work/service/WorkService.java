@@ -12,19 +12,25 @@ import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class WorkService {
 
     private final WorkRepository workRepository;
     private final CourseRepository courseRepository;
 
+    public WorkService(WorkRepository workRepository, CourseRepository courseRepository) {
+        this.workRepository = workRepository;
+        this.courseRepository = courseRepository;
+    }
+
+    @Transactional
     public void createWork(long courseId, WorkCreateReqDto workCreateReqDto) {
         Course course = courseRepository.findById(courseId).orElseThrow(()-> new CustomException("수업을 찾을 수 없습니다.", 404, 3001));
-        System.out.println("course: " +course.getId() + "workCreateReqDto: " + workCreateReqDto.title());
+        course.increaseWorkCount();
         Work work = Work.createWork(course, workCreateReqDto);
-        System.out.println("work: " + work.getId() + work.getTitle());
         workRepository.save(work);
     }
 

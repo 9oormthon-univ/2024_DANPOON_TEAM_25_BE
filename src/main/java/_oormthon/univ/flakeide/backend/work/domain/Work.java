@@ -45,14 +45,12 @@ public class Work {
     }
 
     public static Work createWork(Course course, WorkCreateReqDto workCreateReqDto) {
-        Work work = Work.builder()
+        return Work.builder()
             .title(workCreateReqDto.title())
             .description(workCreateReqDto.description())
             .dueDate(workCreateReqDto.dueDate())
             .course(course)
             .build();
-        System.out.println("domain: " + work.getTitle());
-        return work;
     }
 
 }

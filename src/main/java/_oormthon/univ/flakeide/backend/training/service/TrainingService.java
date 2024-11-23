@@ -11,8 +11,10 @@ import _oormthon.univ.flakeide.backend.training.domain.repository.TrainingReposi
 import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class TrainingService {
 
     private final TrainingRepository trainingRepository;
@@ -24,8 +26,10 @@ public class TrainingService {
         this.courseRepository = courseRepository;
     }
 
+    @Transactional
     public void createTraining(long courseId, TrainingCreateReqDto trainingCreateReqDto) {
         Course course = courseRepository.findById(courseId).orElseThrow(()-> new CustomException("수업을 찾을 수 없습니다.", 404, 3001));
+        course.increaseTrainingCount();
         Training training = Training.createTraining(course, trainingCreateReqDto);
         trainingRepository.save(training);
     }
