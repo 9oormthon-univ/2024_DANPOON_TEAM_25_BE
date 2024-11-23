@@ -28,9 +28,4 @@ public class SnowPineController {
         return ResponseEntity.ok(snowPineService.getCourseOfSnowPine(snowPineId));
     }
 
-    @GetMapping("/course/{courseId}/snowflake")
-    @AccessSnowPineToken
-    public ResponseEntity<ListUserResDto> getUsersOfCourse(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("courseId") long curseId) {
-        return ResponseEntity.ok(snowPineService.getUsersOfCourse(authorizationHeader, curseId));
-    }
 }
