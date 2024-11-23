@@ -26,6 +26,12 @@ public class Course {
     @Column(name = "snowflakeCount")
     private int snowflakeCount;
 
+    @Column(name = "trainingCount")
+    private int trainingCount;
+
+    @Column(name = "workCount")
+    private int workCount;
+
     @Column(name = "max_snowflakes")
     private int maxSnowflakes;
 
@@ -46,7 +52,15 @@ public class Course {
         this.snowPine = snowPine;
     }
 
-    private void increaseSnowflake(int snowflakeCount) {
+    public void increaseSnowflake() {
         this.snowflakeCount++;
+    }
+
+    public void increaseTrainingCount() {
+        this.trainingCount++;
+    }
+
+    public void increaseWorkCount() {
+        this.workCount++;
     }
 }
