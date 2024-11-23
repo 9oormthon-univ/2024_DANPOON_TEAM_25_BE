@@ -20,6 +20,10 @@ spring:
 server:
   port: 8081
 
+grpc.server:
+  host: 213.190.4.144
+  port: 31000
+
 kakao:
   client_id: ${kakao_client_id}
   redirect_uri: ${kakao_redirect_uri}
