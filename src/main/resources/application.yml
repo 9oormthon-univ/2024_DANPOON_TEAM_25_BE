@@ -4,12 +4,19 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20        # 최대 풀 크기 (필요에 따라 조정)
+      minimum-idle: 5              # 최소 유휴 연결 수
+      idle-timeout: 30000          # 유휴 상태 유지 시간 (밀리초)
+      connection-timeout: 30000    # 연결 타임아웃 (밀리초)
+      max-lifetime: 1800000        # 연결의 최대 수명 (밀리초)
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
 server:
   port: 8081
 
