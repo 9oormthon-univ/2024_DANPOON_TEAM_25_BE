@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package course;
+
+service CourseIDEService {
+  rpc Create (CourseIDECreateRequest) returns (stream CourseIDECreateResponse);
+}
+
+message CourseIDECreateRequest {
+  string student_id = 1;
+  string course_id = 2;
+  repeated string spec = 3;
+}
+
+message CourseIDECreateResponse {
+  string message = 1;
+  bool ok = 2;
+}
