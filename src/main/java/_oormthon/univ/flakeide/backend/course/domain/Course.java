@@ -1,19 +1,15 @@
 package _oormthon.univ.flakeide.backend.course.domain;
 
 import _oormthon.univ.flakeide.backend.auth.domain.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Course {
 
@@ -21,26 +17,28 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "TITLE")
+    @Column(name = "title")
     private String title;
 
-    @Column(name = "DESCRIPTION")
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "MAX_SNOWFLAKES")
+    @Column(name = "max_snowflakes")
     private int maxSnowflakes;
 
-    @Column(name = "INVITE_CODE")
-    private int inviteCode;
+    @Column(name = "invite_code")
+    private String inviteCode;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User snowPine;
 
     @Builder
-    public Course(String title, String description, int maxSnowflakes) {
+    public Course(String title, String description, int maxSnowflakes, String inviteCode, User snowPine) {
         this.title = title;
         this.description = description;
         this.maxSnowflakes = maxSnowflakes;
+        this.inviteCode = inviteCode;
+        this.snowPine = snowPine;
     }
 }

@@ -5,14 +5,14 @@ import lombok.Builder;
 
 @Builder
 public record CourseResDto(
-    String title,
-    String description
+        String title,
+        String description
 ) {
     public static CourseResDto from(Course course) {
         return CourseResDto.builder()
-            .title(course.getTitle())
-            .description(course.getDescription())
-            .build();
+                .title(course.getTitle())
+                .description(course.getDescription())
+                .build();
     }
 
 }
