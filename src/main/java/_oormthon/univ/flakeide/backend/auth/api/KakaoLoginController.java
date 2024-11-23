@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,11 @@ public class KakaoLoginController {
 
     public KakaoLoginController(KakaoService kakaoService) {
         this.kakaoService = kakaoService;
+    }
+
+    @GetMapping("oauth/token")
+    public ResponseEntity<String> kakaoLoginToken(@RequestParam("code") String code) {
+        return new ResponseEntity<>(kakaoService.getAccessToken(code), HttpStatus.OK);
     }
 
     @GetMapping("/oauth/kakao")
