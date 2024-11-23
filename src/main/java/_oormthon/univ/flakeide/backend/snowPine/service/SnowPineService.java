@@ -38,21 +38,8 @@ public class SnowPineService {
             .build();
     }
 
-    public ListUserResDto getUsersOfCourse(String authorizationHeader, long courseId) {
-        long snowPineId = userTokenService.getUserInfoFromToken(authorizationHeader);
-        return ListUserResDto.builder()
-            .userResDtoList(getUserResDtoList(courseId))
-            .build();
-    }
-
     private List<CourseResDto> getCourseResDtoList(User snowPine) {
         return courseRepository.findAllBySnowPine(snowPine).stream().map(
             CourseResDto::from).toList();
-    }
-
-    private List<UserResDto> getUserResDtoList(long courseId) {
-        return snowflakeCourseRepository.findAllUserBySnowflake(courseId)
-            .stream().map(UserResDto::from).toList();
-
     }
 }
