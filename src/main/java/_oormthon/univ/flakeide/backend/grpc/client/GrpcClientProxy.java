@@ -1,10 +1,11 @@
 package _oormthon.univ.flakeide.backend.grpc.client;
 
 
+import io.grpc.Channel;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.nio.channels.Channel;
 
 public class GrpcClientProxy implements InvocationHandler {
     private final Channel channel;
