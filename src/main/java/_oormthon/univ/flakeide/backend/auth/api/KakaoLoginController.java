@@ -37,22 +37,7 @@ public class KakaoLoginController {
         this.tokenProvider = tokenProvider;
     }
 
-    // 테스트용
-    @GetMapping("oauth/token")
-    public Token kakaoLoginToken(@RequestBody User user) {
-        long nowTime = (new Date()).getTime();
-        Date tokenExpiredTime = new Date(nowTime + tokenProperties.getTokenValidityTime());
 
-        String accessToken = Jwts.builder()
-            .setSubject(user.getId().toString())
-            .setExpiration(tokenExpiredTime)
-            .signWith(SignatureAlgorithm.HS256, tokenProvider.getSignInKey())
-            .compact();
-
-        return Token.builder()
-            .accessToken(accessToken)
-            .build();
-    }
 
     @GetMapping("/oauth/kakao")
     @Operation(summary = "카카오 로그인 callback")
