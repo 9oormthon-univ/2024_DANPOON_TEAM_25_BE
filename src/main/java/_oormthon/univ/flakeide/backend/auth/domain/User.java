@@ -14,9 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -31,6 +29,14 @@ public class User {
 
     @Column(name = "USER_EMAIL", nullable = false)
     private String email;
+
+    @Builder
+    public User(Long id, UserType userType, String name, String email) {
+        this.id = id;
+        this.userType = userType;
+        this.name = name;
+        this.email = email;
+    }
 
     public void updateUserType(UserType userType) {
         this.userType = userType;

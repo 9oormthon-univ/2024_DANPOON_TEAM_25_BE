@@ -11,11 +11,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @Tag(name = "auth", description = "로그인/회원가입 관련 컨트롤러")
 public class KakaoLoginController {
 
@@ -24,6 +25,11 @@ public class KakaoLoginController {
 
     public KakaoLoginController(KakaoService kakaoService) {
         this.kakaoService = kakaoService;
+    }
+
+    @GetMapping("oauth/token")
+    public ResponseEntity<String> kakaoLoginToken(@RequestParam("code") String code) {
+        return new ResponseEntity<>(kakaoService.getAccessToken(code), HttpStatus.OK);
     }
 
     @GetMapping("/oauth/kakao")
@@ -40,25 +46,4 @@ public class KakaoLoginController {
         return token;
     }
 
-    @PostMapping("/snowflake/signup")
-    @Operation(summary = "눈송이(Snowflake) 회원가입")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 눈송이(Snowflake) 회원가입을 성공함", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
-            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomException.class))),
-            @ApiResponse(responseCode = "500", description = "서버 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomException.class)))
-    })
-    public ResponseEntity<User> signUpSnowflake(@RequestHeader("Authorization") String authorizationHeader) {
-        return ResponseEntity.ok(kakaoService.signUpSnowflake(authorizationHeader));
-    }
-
-    @PostMapping("/snowPine/signup")
-    @Operation(summary = "눈솔(SnowPine) 회원가입")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공적으로 눈솔(SnowPine) 회원가입을 성공함", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
-        @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomException.class))),
-        @ApiResponse(responseCode = "500", description = "서버 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomException.class)))
-    })
-    public ResponseEntity<User> signUpSnowPine(@RequestHeader("Authorization") String authorizationHeader) {
-        return ResponseEntity.ok(kakaoService.signUpSnowPine(authorizationHeader));
-    }
 }
