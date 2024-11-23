@@ -5,6 +5,7 @@ import _oormthon.univ.flakeide.backend.auth.domain.repository.UserRepository;
 import _oormthon.univ.flakeide.backend.course.api.dto.CourseResDto;
 import _oormthon.univ.flakeide.backend.course.api.dto.ListCourseResDto;
 import _oormthon.univ.flakeide.backend.course.domain.repository.CourseRepository;
+import _oormthon.univ.flakeide.backend.global.exception.CustomException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ public class SnowPineService {
     }
 
     public ListCourseResDto getCourseOfSnowPine(long snowPineId) {
-        User snowPine = snowPineRepository.findById(snowPineId).orElseThrow();
+        User snowPine = snowPineRepository.findById(snowPineId).orElseThrow(()->new CustomException("사용자를 찾을 수 없습니다.", 404, 1001));
         return ListCourseResDto.builder()
             .courseList(getCourseResDtoList(snowPine))
             .build();
