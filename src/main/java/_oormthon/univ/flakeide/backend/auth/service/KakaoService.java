@@ -87,19 +87,4 @@ public class KakaoService {
         return tokenProvider.createToken(user);
     }
 
-    @Transactional
-    public User signUpSnowflake(String authorizationHeader) {
-        long id = userTokenService.getUserInfoFromToken(authorizationHeader);
-        User user = userRepository.findById(id).orElseThrow(()->new CustomException("사용자를 찾을 수 없습니다.", 404, 1001));
-        user.updateUserType(UserType.SNOWFLAKE);
-        return user;
-    }
-
-    @Transactional
-    public User signUpSnowPine(String authorizationHeader) {
-        long id = userTokenService.getUserInfoFromToken(authorizationHeader);
-        User user = userRepository.findById(id).orElseThrow(()->new CustomException("사용자를 찾을 수 없습니다.", 404, 1001));
-        user.updateUserType(UserType.SNOW_PINE);
-        return user;
-    }
 }

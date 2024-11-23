@@ -23,6 +23,15 @@ public class Course {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "snowflakeCount")
+    private int snowflakeCount;
+
+    @Column(name = "trainingCount")
+    private int trainingCount;
+
+    @Column(name = "workCount")
+    private int workCount;
+
     @Column(name = "max_snowflakes")
     private int maxSnowflakes;
 
@@ -34,11 +43,24 @@ public class Course {
     private User snowPine;
 
     @Builder
-    public Course(String title, String description, int maxSnowflakes, String inviteCode, User snowPine) {
+    public Course(String title, String description, int snowflakeCount, int maxSnowflakes, String inviteCode, User snowPine) {
         this.title = title;
         this.description = description;
+        this.snowflakeCount = snowflakeCount;
         this.maxSnowflakes = maxSnowflakes;
         this.inviteCode = inviteCode;
         this.snowPine = snowPine;
+    }
+
+    public void increaseSnowflake() {
+        this.snowflakeCount++;
+    }
+
+    public void increaseTrainingCount() {
+        this.trainingCount++;
+    }
+
+    public void increaseWorkCount() {
+        this.workCount++;
     }
 }

@@ -38,6 +38,11 @@ public class CourseController {
     }
 
     @PostMapping()
+    @Operation(summary = "수업 등록")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공적으로 수업을 등록함", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Course.class))),
+        @ApiResponse(responseCode = "500", description = "서버 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomException.class)))
+    })
     public ResponseEntity<Course> createCourse(@RequestBody CreateCourseDto dto) {
         return ResponseEntity.ok(courseService.createCourse(dto));
     }
@@ -60,4 +65,5 @@ public class CourseController {
     public ResponseEntity<ListUserResDto> getUsersOfCourse(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("courseId") long curseId) {
         return ResponseEntity.ok(courseService.getUsersOfCourse(authorizationHeader, curseId));
     }
+
 }

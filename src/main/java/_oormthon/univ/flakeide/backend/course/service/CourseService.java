@@ -97,7 +97,7 @@ public class CourseService {
     }
 
     public ListUserResDto getUsersOfCourse(String authorizationHeader, long courseId) {
-        long snowPineId = userTokenService.getUserInfoFromToken(authorizationHeader);
+
         return ListUserResDto.builder()
                 .userResDtoList(getUserResDtoList(courseId))
                 .build();
