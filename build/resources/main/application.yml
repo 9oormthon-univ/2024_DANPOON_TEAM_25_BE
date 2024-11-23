@@ -30,4 +30,4 @@ kakao:
 
 access:
   secret_key: ${SECRET_KEY}
-  token_validity_time: ${ACCESS_TOKEN_VALIDITY_TIME}
+  token_validity_time: 36000000

@@ -7,7 +7,7 @@ plugins {
 
 group = '9oormthon.univ.flakeide'
 version = '0.0.1-SNAPSHOT'
-def grpcVersion = '1.68.1'
+def grpcVersion = '1.56.1'
 def protobufVersion = '3.21.7'
 java {
     toolchain {
@@ -31,8 +31,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+<<<<<<< HEAD
     implementation 'io.grpc:grpc-netty:1.68.1'
     implementation 'io.grpc:grpc-protobuf:1.68.1'
+=======
+    implementation 'io.grpc:grpc-netty-shaded:1.56.1' // 버전은 필요에 따라 조정
+    implementation 'io.grpc:grpc-protobuf:1.56.1'
+    implementation 'io.grpc:grpc-stub:1.56.1'
+>>>>>>> e9b9b5ea2a33f656f7de6962868bf2b718af7780
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'io.grpc:grpc-stub:1.57.2'
     implementation "com.google.protobuf:protobuf-java:4.28.3"
@@ -89,4 +95,8 @@ tasks.withType(Copy) {
     filesMatching("**/*.proto") {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> e9b9b5ea2a33f656f7de6962868bf2b718af7780

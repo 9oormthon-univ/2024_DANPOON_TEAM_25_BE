@@ -7,7 +7,6 @@ import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.nio.channels.Channel;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,25 +23,47 @@ public class GrpcClientService {
 
     @PostConstruct
     public void init() {
-        // Channel 생성
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
-                .usePlaintext()
-                .build();
+        try {
+            // gRPC 채널 생성
+            ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
+                    .usePlaintext()
+                    .build();
 
-        // Reflection을 통해 모든 gRPC 클라이언트 인터페이스를 찾아서 프록시 생성
-        Reflections reflections = new Reflections("course.CourseIDEService");
-        Set<Class<?>> grpcInterfaces = reflections.getTypesAnnotatedWith(GrpcClient.class);
+            // Reflections 객체 초기화 - 실제 gRPC 클라이언트 인터페이스가 위치한 패키지로 변경
+            Reflections reflections = new Reflections("_oormthon.univ.flakeide.backend.course"); // 실제 패키지 경로로 변경
 
-        for (Class<?> interfaceClass : grpcInterfaces) {
-            GrpcClient annotation = interfaceClass.getAnnotation(GrpcClient.class);
-            Class<?> stubClass = annotation.stubClass();
+            // @GrpcClient 애노테이션이 있는 모든 인터페이스 스캔
+            Set<Class<?>> grpcInterfaces = reflections.getTypesAnnotatedWith(GrpcClient.class);
 
-            Object clientProxy = GrpcClientProxy.createClient(interfaceClass, (Channel) channel, stubClass);
-            grpcClients.put(interfaceClass.getName(), clientProxy);
+            for (Class<?> interfaceClass : grpcInterfaces) {
+                GrpcClient annotation = interfaceClass.getAnnotation(GrpcClient.class);
+                Class<?> stubClass = annotation.stubClass();
+
+                try {
+                    // 클라이언트 프록시 생성
+                    Object clientProxy = GrpcClientProxy.createClient(interfaceClass, channel, stubClass);
+                    grpcClients.put(interfaceClass.getName(), clientProxy);
+                    System.out.println("Successfully created gRPC client for: " + interfaceClass.getName());
+                } catch (Exception e) {
+                    System.err.println("Failed to create gRPC client for: " + interfaceClass.getName());
+                    e.printStackTrace();
+                }
+            }
+
+            System.out.println("Initialized gRPC clients: " + grpcClients.keySet());
+        } catch (Exception e) {
+            System.err.println("Failed to initialize gRPC clients.");
+            e.printStackTrace();
         }
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getClient(Class<T> clientClass) {
-        return (T) grpcClients.get(clientClass.getName());
+        System.out.println("Fetching gRPC client for: " + clientClass.getName());
+        T client = (T) grpcClients.get(clientClass.getName());
+        if (client == null) {
+            System.err.println("gRPC client not found for: " + clientClass.getName());
+        }
+        return client;
     }
 }

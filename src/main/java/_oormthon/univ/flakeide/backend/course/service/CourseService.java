@@ -5,6 +5,7 @@ import _oormthon.univ.flakeide.backend.auth.api.dto.UserResDto;
 import _oormthon.univ.flakeide.backend.auth.domain.User;
 import _oormthon.univ.flakeide.backend.auth.domain.UserType;
 import _oormthon.univ.flakeide.backend.auth.domain.repository.UserRepository;
+import _oormthon.univ.flakeide.backend.course.ClassGrpcClient;
 import _oormthon.univ.flakeide.backend.course.api.dto.CourseResDto;
 import _oormthon.univ.flakeide.backend.course.api.dto.CourseSpec;
 import _oormthon.univ.flakeide.backend.course.api.dto.CreateCourseDto;
@@ -15,12 +16,14 @@ import _oormthon.univ.flakeide.backend.course.domain.repository.CourseSpecReposi
 import _oormthon.univ.flakeide.backend.course.domain.repository.SnowflakeCourseRepository;
 import _oormthon.univ.flakeide.backend.global.exception.CustomException;
 import _oormthon.univ.flakeide.backend.global.util.UserTokenService;
-import _oormthon.univ.flakeide.backend.grpc.client.ClassGrpcClient;
 import _oormthon.univ.flakeide.backend.grpc.client.GrpcClientService;
-import org.springframework.beans.factory.annotation.Autowired;
+import course.CourseIDEServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -33,8 +36,6 @@ public class CourseService {
     private final SnowflakeCourseRepository snowflakeCourseRepository;
     private final UserRepository userRepository;
     private final CourseSpecRepository courseSpecRepository;
-
-    @Autowired
     private final GrpcClientService grpcClientService;
 
     public CourseService(CourseRepository courseRepository, UserTokenService userTokenService,
@@ -82,12 +83,26 @@ public class CourseService {
             System.out.println(e.getMessage());
             throw new CustomException("수업 스펙 생성 도중 오류가 생겼습니다.", 500, 3001);
         }
-        ClassGrpcClient client = grpcClientService.getClient(ClassGrpcClient.class);
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("213.190.4.144", 31000)
+                .usePlaintext()
+                .build();
+        CourseIDEServiceGrpc.CourseIDEServiceBlockingStub blockingStub = CourseIDEServiceGrpc.newBlockingStub(channel);
         course.Course.CourseIDECreateRequest request = course.Course.CourseIDECreateRequest.newBuilder()
                 .setCourseId(dto.course_id().toString())
                 .setStudentId(dto.student_id().toString())
                 .build();
-        course.Course.CourseIDECreateResponse response = client.create(request);
+        ClassGrpcClient client = grpcClientService.getClient(ClassGrpcClient.class);
+        System.out.println(client);
+        Iterator<course.Course.CourseIDECreateResponse> responses = blockingStub.create(request);
+
+        // Iterate over the responses
+        while (responses.hasNext()) {
+            course.Course.CourseIDECreateResponse response = responses.next();
+            System.out.println("Received response: " + response.getMessage() + ", OK: " + response.getOk());
+        }
+
+        // Shutdown the channel
+        channel.shutdown();
         return spec;
     }
 
