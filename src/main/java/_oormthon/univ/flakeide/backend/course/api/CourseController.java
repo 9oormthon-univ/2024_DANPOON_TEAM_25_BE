@@ -52,4 +52,5 @@ public class CourseController {
     public ResponseEntity<ListUserResDto> getUsersOfCourse(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("courseId") long curseId) {
         return ResponseEntity.ok(courseService.getUsersOfCourse(authorizationHeader, curseId));
     }
+
 }
