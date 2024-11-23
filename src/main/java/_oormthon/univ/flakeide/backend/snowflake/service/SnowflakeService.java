@@ -1,8 +1,5 @@
 package _oormthon.univ.flakeide.backend.snowflake.service;
 
-import _oormthon.univ.flakeide.backend.auth.domain.User;
-import _oormthon.univ.flakeide.backend.auth.domain.UserType;
-import _oormthon.univ.flakeide.backend.auth.domain.repository.UserRepository;
 import _oormthon.univ.flakeide.backend.course.api.dto.CourseResDto;
 import _oormthon.univ.flakeide.backend.course.api.dto.ListCourseResDto;
 import _oormthon.univ.flakeide.backend.course.domain.repository.SnowflakeCourseRepository;
@@ -24,13 +21,13 @@ public class SnowflakeService {
     }
 
     public ListCourseResDto getCourseOfSnowflake(String authorizationHeader) {
-        Long snowflakeId = userTokenService.getUserInfoFromToken(authorizationHeader);
+        long snowflakeId = userTokenService.getUserInfoFromToken(authorizationHeader);
         return ListCourseResDto.builder()
             .courseList(getCourseResDtoList(snowflakeId))
             .build();
     }
 
-    private List<CourseResDto> getCourseResDtoList(Long snowflakeId) {
+    private List<CourseResDto> getCourseResDtoList(long snowflakeId) {
         return snowflakeCourseRepository.findAllBySnowflake(snowflakeId)
             .stream().map(CourseResDto::from).toList();
     }

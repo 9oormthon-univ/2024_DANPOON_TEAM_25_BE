@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     }
 
     // 그 외 예외 처리
-    @ExceptionHandler(Exception.class)
+
     public ResponseEntity<Object> handleGenericException(Exception ex) {
         ErrorResponse errorResponse = new ErrorResponse(
             false,

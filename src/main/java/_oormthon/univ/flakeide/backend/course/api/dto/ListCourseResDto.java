@@ -8,9 +8,4 @@ import lombok.Builder;
 public record ListCourseResDto(
     List<CourseResDto> courseList
 ) {
-    public ListCourseResDto form(List<CourseResDto> courseList) {
-        return ListCourseResDto.builder()
-            .courseList(courseList)
-            .build();
-    }
 }

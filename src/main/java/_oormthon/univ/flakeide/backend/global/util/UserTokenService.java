@@ -12,9 +12,9 @@ public class UserTokenService {
         this.tokenProvider = tokenProvider;
     }
 
-    public Long getUserInfoFromToken(String authorizationHeader) {
+    public long getUserInfoFromToken(String authorizationHeader) {
         String token = authorizationHeader.substring(7).trim();
         Claims claims = tokenProvider.parseJwt(token);
-        return Long.valueOf(claims.getSubject());
+        return Long.parseLong(claims.getSubject());
     }
 }
