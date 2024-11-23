@@ -39,9 +39,7 @@ public class TrainingService {
 
     public TrainingResDto getTrainingDetail(long courseId, long trainingId) {
         Course course = courseRepository.findById(courseId).orElseThrow(()-> new CustomException("수업을 찾을 수 없습니다.", 404, 3001));
-        // find training
         Training training = trainingRepository.findById(trainingId).orElseThrow(()-> new CustomException("실습을 찾을 수 없습니다.", 404, 4001));
-        // training.course_id== course.id
         if (!(Objects.equals(course.getId(), training.getCourse().getId()))) {
             throw new CustomException("해당수업의 실습이 아닙니다.", 400, 4002);
         }
