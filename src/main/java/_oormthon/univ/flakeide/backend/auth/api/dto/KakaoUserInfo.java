@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 public class KakaoUserInfo {
     //회원 번호
     @JsonProperty("id")
-    public Long id;
+    public long id;
 
     //카카오 계정 정보
     @JsonProperty("kakao_account")

@@ -1,15 +1,15 @@
 package _oormthon.univ.flakeide.backend.snowPine.controller;
 
+import _oormthon.univ.flakeide.backend.auth.api.dto.ListUserResDto;
 import _oormthon.univ.flakeide.backend.course.api.dto.ListCourseResDto;
-import _oormthon.univ.flakeide.backend.course.domain.Course;
-import _oormthon.univ.flakeide.backend.global.util.user.snowPine.AccessSnowPine;
+import _oormthon.univ.flakeide.backend.global.util.user.snowPine.AccessSnowPineId;
+import _oormthon.univ.flakeide.backend.global.util.user.snowPine.AccessSnowPineToken;
 import _oormthon.univ.flakeide.backend.snowPine.service.SnowPineService;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,8 +23,14 @@ public class SnowPineController {
     }
 
     @GetMapping("/{snowpineId}/course")
-    @AccessSnowPine
+    @AccessSnowPineId
     public ResponseEntity<ListCourseResDto> getCourseOfSnowPine(@PathVariable("snowpineId") long snowPineId) {
         return ResponseEntity.ok(snowPineService.getCourseOfSnowPine(snowPineId));
+    }
+
+    @GetMapping("/course/{courseId}/snowflake")
+    @AccessSnowPineToken
+    public ResponseEntity<ListUserResDto> getUsersOfCourse(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("courseId") long curseId) {
+        return ResponseEntity.ok(snowPineService.getUsersOfCourse(authorizationHeader, curseId));
     }
 }

@@ -12,6 +12,6 @@ import org.springframework.stereotype.Component;
 public class TokenProperties {
 
     private String secretKey;
-    private Long tokenValidityTime;
+    private long tokenValidityTime;
 
 }
