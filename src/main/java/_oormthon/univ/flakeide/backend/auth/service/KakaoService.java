@@ -6,6 +6,7 @@ import _oormthon.univ.flakeide.backend.auth.domain.UserType;
 import _oormthon.univ.flakeide.backend.auth.domain.repository.UserRepository;
 import _oormthon.univ.flakeide.backend.auth.api.dto.KakaoTokenResDto;
 import _oormthon.univ.flakeide.backend.auth.api.dto.KakaoUserInfo;
+import _oormthon.univ.flakeide.backend.global.exception.CustomException;
 import _oormthon.univ.flakeide.backend.global.util.UserTokenService;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import lombok.extern.slf4j.Slf4j;
@@ -89,7 +90,7 @@ public class KakaoService {
     @Transactional
     public User signUpSnowflake(String authorizationHeader) {
         Long id = userTokenService.getUserInfoFromToken(authorizationHeader);
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id).orElseThrow(()->new CustomException("사용자를 찾을 수 없습니다.", 404, 1001));
         user.updateUserType(UserType.SNOWFLAKE);
         return user;
     }
@@ -97,7 +98,7 @@ public class KakaoService {
     @Transactional
     public User signUpSnowPine(String authorizationHeader) {
         Long id = userTokenService.getUserInfoFromToken(authorizationHeader);
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id).orElseThrow(()->new CustomException("사용자를 찾을 수 없습니다.", 404, 1001));
         user.updateUserType(UserType.SNOW_PINE);
         return user;
     }

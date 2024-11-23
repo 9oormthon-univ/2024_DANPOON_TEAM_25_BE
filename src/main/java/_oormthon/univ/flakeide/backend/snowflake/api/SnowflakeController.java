@@ -22,7 +22,6 @@ public class SnowflakeController {
     @GetMapping("/course")
     @AccessSnowflake
     public ResponseEntity<ListCourseResDto> getCourseOfSnowflake(@RequestHeader("Authorization") String authorizationHeader) {
-        System.out.println("snowflakeToken: " + authorizationHeader);
         return ResponseEntity.ok(snowflakeService.getCourseOfSnowflake(authorizationHeader));
     }
 }
