@@ -1,5 +1,6 @@
 package _oormthon.univ.flakeide.backend.auth.api.dto;
 
+import _oormthon.univ.flakeide.backend.auth.domain.User;
 import _oormthon.univ.flakeide.backend.auth.domain.UserType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -15,4 +16,7 @@ public class Token {
 
     @JsonProperty("userType")
     private UserType userType;
+
+    @JsonProperty("id")
+    private User id;
 }

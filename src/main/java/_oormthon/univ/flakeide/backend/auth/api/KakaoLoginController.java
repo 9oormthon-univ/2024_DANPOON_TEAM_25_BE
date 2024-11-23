@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,11 +62,12 @@ public class KakaoLoginController {
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomException.class))),
             @ApiResponse(responseCode = "500", description = "서버 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomException.class)))
     })
-    public @ResponseBody Token kakaoLogin(@RequestParam("code") String code) {
+    public ResponseEntity<Token> kakaoLogin(@RequestParam("code") String code) {
         String kakaoAccessToken = kakaoService.getAccessToken(code);
         Token token = kakaoService.loginOrSignUp(kakaoAccessToken);
         System.out.println("로그인 성공 !");
-        return token;
+
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
 }
