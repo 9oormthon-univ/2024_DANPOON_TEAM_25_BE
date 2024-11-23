@@ -3,13 +3,18 @@ package _oormthon.univ.flakeide.backend.auth.api;
 import _oormthon.univ.flakeide.backend.auth.api.dto.Token;
 import _oormthon.univ.flakeide.backend.auth.domain.User;
 import _oormthon.univ.flakeide.backend.auth.service.KakaoService;
+import _oormthon.univ.flakeide.backend.auth.service.TokenProperties;
+import _oormthon.univ.flakeide.backend.auth.service.TokenProvider;
 import _oormthon.univ.flakeide.backend.global.exception.CustomException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +25,33 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "auth", description = "로그인/회원가입 관련 컨트롤러")
 public class KakaoLoginController {
 
-    @Autowired
-    public final KakaoService kakaoService;
+    private final KakaoService kakaoService;
+    private final TokenProperties tokenProperties;
+    private final TokenProvider tokenProvider;
 
-    public KakaoLoginController(KakaoService kakaoService) {
+    public KakaoLoginController(KakaoService kakaoService, TokenProperties tokenProperties,
+        TokenProvider tokenProvider) {
         this.kakaoService = kakaoService;
+        this.tokenProperties = tokenProperties;
+        this.tokenProvider = tokenProvider;
     }
 
+    // 테스트용
     @GetMapping("oauth/token")
-    public ResponseEntity<String> kakaoLoginToken(@RequestParam("code") String code) {
-        return new ResponseEntity<>(kakaoService.getAccessToken(code), HttpStatus.OK);
+    public Token kakaoLoginToken(@RequestBody User user) {
+        long nowTime = (new Date()).getTime();
+        Date tokenExpiredTime = new Date(nowTime + tokenProperties.getTokenValidityTime());
+
+        String accessToken = Jwts.builder()
+            .setSubject(user.getId().toString())
+            .setExpiration(tokenExpiredTime)
+            .signWith(SignatureAlgorithm.HS256, tokenProvider.getSignInKey())
+            .compact();
+
+        return Token.builder()
+            .accessToken(accessToken)
+            .build();
+
     }
 
     @GetMapping("/oauth/kakao")

@@ -46,7 +46,8 @@ public class TokenProvider {
                 .getBody();
     }
 
-    private SecretKey getSignInKey() {
+    //privite로 바꾸기
+    public SecretKey getSignInKey() {
         byte[] bytes = tokenProperties.getSecretKey().getBytes(StandardCharsets.UTF_8);
         return new SecretKeySpec(bytes, "HmacSHA256");
     }
