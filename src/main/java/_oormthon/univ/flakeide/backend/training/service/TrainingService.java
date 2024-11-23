@@ -45,7 +45,7 @@ public class TrainingService {
         if (!(Objects.equals(course.getId(), training.getCourse().getId()))) {
             throw new CustomException("해당수업의 실습이 아닙니다.", 400, 4002);
         }
-         return TrainingResDto.from(trainingRepository.findById(trainingId).orElseThrow());
+         return TrainingResDto.from(training);
     }
 
     private List<TrainingResDto> getTrainingResDtoList(Course course) {

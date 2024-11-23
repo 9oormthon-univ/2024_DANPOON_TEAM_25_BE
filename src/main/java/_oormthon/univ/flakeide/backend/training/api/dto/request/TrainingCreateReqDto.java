@@ -7,5 +7,4 @@ public record TrainingCreateReqDto(
     String description,
     LocalDateTime dueDate
 ) {
-
 }

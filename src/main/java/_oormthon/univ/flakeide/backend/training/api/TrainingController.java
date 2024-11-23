@@ -56,7 +56,7 @@ public class TrainingController {
     @GetMapping("{courseId}/training/{trainingId}")
     @Operation(summary = "수업의 실습(training) 상세 조회")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공적으로 수업의 실습(training) 상세 조회함", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "200", description = "성공적으로 수업의 실습(training) 상세 조회함", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TrainingResDto.class))),
         @ApiResponse(responseCode = "404", description = "수업을 찾지 못함", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomException.class))),
         @ApiResponse(responseCode = "500", description = "서버 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomException.class)))
     })
